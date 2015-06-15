@@ -2,6 +2,7 @@ package com.jlundhoo.cloudstreamer;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -23,9 +23,10 @@ public class MainActivityFragment extends Fragment {
     private EditText editTextSearch;
     private ListView artistListView;
 
-    private List<String> artistListMock;
+    private List<Album> albumListMock = new ArrayList<Album>();
 
     private MyAdapter mAdapter; //Create own adapter for additional control
+
 
     public MainActivityFragment() {
 
@@ -34,23 +35,25 @@ public class MainActivityFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-
-        artistListMock = new ArrayList<String>(Arrays.asList("Coldplay - Warmplay", "Córdoba - Aruba", "La Plata - Patata"));
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
-        mAdapter = new MyAdapter(getActivity(), artistListMock);
+        mAdapter = new MyAdapter(getActivity(), albumListMock);
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         welcomeTV = (TextView)rootView.findViewById(R.id.welcomeTV);
-        editTextSearch = (EditText)rootView.findViewById(R.id.editTextSearch);
-        artistListView = (ListView)rootView.findViewById(R.id.artistLV);
+        try {
+            editTextSearch = (EditText) rootView.findViewById(R.id.editTextSearch);
+            artistListView = (ListView) rootView.findViewById(R.id.artistLV);
+            artistListView.setAdapter(mAdapter);
+        } catch (Exception e){
+            Log.i(getString(R.string.LOG_TAG), e.toString());
+            e.printStackTrace();
+        }
 
-
-        artistListView.setAdapter(mAdapter);
 
         return rootView;
     }

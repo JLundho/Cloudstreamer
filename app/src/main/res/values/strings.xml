@@ -2,4 +2,6 @@
     <string name="app_name">CloudStreamer</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
+    <string name="LOG_TAG">Cloudstreamer</string>
 </resources>

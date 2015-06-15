@@ -9,6 +9,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/artistTV"
-        android:text="Heja!"/>
+        android:text="Artist name!"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/albumTV"
+        android:text="Album name!"/>
 
 </LinearLayout>
