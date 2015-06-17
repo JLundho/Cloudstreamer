@@ -27,6 +27,7 @@ public class MainActivityFragment extends Fragment {
 
     private MyAdapter mAdapter; //Create own adapter for additional control
 
+    private Album myAlbum;
 
     public MainActivityFragment() {
 
@@ -41,20 +42,17 @@ public class MainActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
-        mAdapter = new MyAdapter(getActivity(), albumListMock);
-
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         welcomeTV = (TextView)rootView.findViewById(R.id.welcomeTV);
-        try {
-            editTextSearch = (EditText) rootView.findViewById(R.id.editTextSearch);
-            artistListView = (ListView) rootView.findViewById(R.id.artistLV);
-            artistListView.setAdapter(mAdapter);
-        } catch (Exception e){
-            Log.i(getString(R.string.LOG_TAG), e.toString());
-            e.printStackTrace();
-        }
+        editTextSearch = (EditText) rootView.findViewById(R.id.editTextSearch);
+        artistListView = (ListView) rootView.findViewById(R.id.artistLV);
+
+        mAdapter = new MyAdapter(getActivity(), albumListMock);
 
 
+        artistListView.setAdapter(mAdapter);
+
+        Log.i(getString(R.string.LOG_TAG), ""+mAdapter.getCount());
         return rootView;
     }
 }

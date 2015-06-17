@@ -8,7 +8,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,13 +15,20 @@ import java.util.List;
  */
 public class MyAdapter extends ArrayAdapter{
 
-    private List albumListMock = new ArrayList<Album>();
+    private List albumListMock;
 
-    private Album newAlbum;
 
     public MyAdapter(Context ctx, List<Album> albumList){
         super(ctx, 0);
         albumListMock = albumList;
+    }
+
+    public void add(Album mAlbum){
+        albumListMock.add(mAlbum);
+    }
+
+    public int getCount() {
+        return albumListMock.size();
     }
 
     /*
@@ -33,6 +39,7 @@ public class MyAdapter extends ArrayAdapter{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder itemHolder;
+
         //Check if View has already been inflated and can be reused, otherwise inflate it.
         if(convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item_artist, parent, false);
@@ -46,14 +53,16 @@ public class MyAdapter extends ArrayAdapter{
         } else {
             itemHolder = (ViewHolder) convertView.getTag(); //All information about a view can be retrieved from the View-tag.
         }
-        //Create widgets and inflate widget-ID
+        //Needs to be casted, since private implementation makes ArrayList return an object without a special type of Album.
 
-        itemHolder.artistName.setText("Grej"); //albumListMock.get(position).getArtistName);
-        itemHolder.artistAlbum.setText("Nej"/*(albumListMock.get(position).getArtistAlbum*/);
+        Album mAlbum = (Album)albumListMock.get(position);
+        //Create widgets and inflate widget-ID
+        itemHolder.artistName.setText(mAlbum.getAlbumName());
+        itemHolder.artistAlbum.setText(mAlbum.getArtistName());
         return convertView;
     }
 
-    class ViewHolder {
+    static class ViewHolder {
         TextView artistName;
         TextView artistAlbum;
         ImageView artistImage; //Not yet implemented
