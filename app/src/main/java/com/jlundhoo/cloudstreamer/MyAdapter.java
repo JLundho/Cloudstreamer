@@ -27,8 +27,13 @@ public class MyAdapter extends ArrayAdapter{
         albumListMock.add(mAlbum);
     }
 
-    public int getCount() {
+    @Override
+    public int getCount(){
         return albumListMock.size();
+    }
+
+    public Album getItemById(int position){
+        return (Album)albumListMock.get(position);
     }
 
     /*
