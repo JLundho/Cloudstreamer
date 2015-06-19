@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
@@ -23,6 +24,7 @@ import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.ArtistsPager;
 import retrofit.Callback;
 import retrofit.RetrofitError;
+import retrofit.android.MainThreadExecutor;
 import retrofit.client.Response;
 
 
@@ -39,7 +41,7 @@ public class MainActivityFragment extends Fragment {
     private Album newAlbum;
 
     private List<Artist> artistSearchResult = new ArrayList<Artist>();
-    private ArtistsPager myArtistPager;
+
 
     private MyAdapter mAdapter; //Create own adapter for additional control
 
@@ -64,15 +66,14 @@ public class MainActivityFragment extends Fragment {
         artistListView = (ListView) rootView.findViewById(R.id.artistLV);
         searchImageView = (ImageView) rootView.findViewById(R.id.searchImageView);
 
-
         mAdapter = new MyAdapter(getActivity(), artistSearchResult);
         artistListView.setAdapter(mAdapter);
 
         searchImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String artistName = editTextSearch.getText().toString();
-                searchForArtist(artistName);
+                String searchString = editTextSearch.getText().toString();
+                searchForArtist(searchString);
             }
         });
 
@@ -87,15 +88,15 @@ public class MainActivityFragment extends Fragment {
     }
 
     private void searchForArtist(String searchString){
-        SpotifyApi api = new SpotifyApi();
-        SpotifyService spotify = api.getService();
-        myArtistPager = new ArtistsPager();
 
+        SpotifyApi api = new SpotifyApi(Executors.newSingleThreadExecutor(),
+                new MainThreadExecutor());
+        SpotifyService spotify = api.getService();
         spotify.searchArtists(searchString, new Callback<ArtistsPager>() {
             @Override
             public void success(ArtistsPager artistsPager, Response response) {
-                myArtistPager = artistsPager;
                 artistSearchResult = artistsPager.artists.items;
+                mAdapter.addArtists(artistSearchResult);
             }
 
             @Override
@@ -103,8 +104,10 @@ public class MainActivityFragment extends Fragment {
                 Log.d(getString(R.string.LOG_TAG), error.toString());
             }
         });
-        mAdapter.addArtists(artistSearchResult);
+
     }
+
+
 }
 
 
