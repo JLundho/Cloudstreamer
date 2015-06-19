@@ -1,5 +1,6 @@
 package com.jlundhoo.cloudstreamer;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -21,9 +22,7 @@ import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Album;
 import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.ArtistsPager;
-import retrofit.Callback;
 import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 
 /**
@@ -39,7 +38,7 @@ public class MainActivityFragment extends Fragment {
     private Album newAlbum;
 
     private List<Artist> artistSearchResult = new ArrayList<Artist>();
-    private ArtistsPager myArtistPager;
+
 
     private MyAdapter mAdapter; //Create own adapter for additional control
 
@@ -64,15 +63,16 @@ public class MainActivityFragment extends Fragment {
         artistListView = (ListView) rootView.findViewById(R.id.artistLV);
         searchImageView = (ImageView) rootView.findViewById(R.id.searchImageView);
 
-
         mAdapter = new MyAdapter(getActivity(), artistSearchResult);
         artistListView.setAdapter(mAdapter);
 
         searchImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String artistName = editTextSearch.getText().toString();
-                searchForArtist(artistName);
+                String searchString = editTextSearch.getText().toString();
+
+                SearchClass mSearchClass = new SearchClass();
+                mSearchClass.execute(searchString);
             }
         });
 
@@ -86,24 +86,38 @@ public class MainActivityFragment extends Fragment {
         return rootView;
     }
 
-    private void searchForArtist(String searchString){
+    public class SearchClass extends AsyncTask<String, Void, ArtistsPager>{
         SpotifyApi api = new SpotifyApi();
         SpotifyService spotify = api.getService();
-        myArtistPager = new ArtistsPager();
+        ArtistsPager myArtistPager;
 
-        spotify.searchArtists(searchString, new Callback<ArtistsPager>() {
-            @Override
-            public void success(ArtistsPager artistsPager, Response response) {
-                myArtistPager = artistsPager;
-                artistSearchResult = artistsPager.artists.items;
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
+        @Override
+        protected ArtistsPager doInBackground(String...params) {
+            String searchString = params[0];
+            try{
+                return spotify.searchArtists(searchString);
+            } catch (RetrofitError error){
                 Log.d(getString(R.string.LOG_TAG), error.toString());
+                return null;
             }
-        });
-        mAdapter.addArtists(artistSearchResult);
+        }
+
+        @Override
+        protected void onPostExecute(ArtistsPager artistPager) {
+            super.onPostExecute(artistPager);
+
+            myArtistPager = artistPager;
+            artistSearchResult = artistPager.artists.items;
+
+            Log.i("Artist", String.valueOf(artistSearchResult.size()));
+            if(artistSearchResult.size() > 0) {
+                for(int i = 0; i < artistSearchResult.size(); i++){
+                    mAdapter.add(artistSearchResult.get(i));
+                }
+                mAdapter.notifyDataSetChanged();
+            }
+
+        }
     }
 }
 
