@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +25,7 @@ public class MainActivityFragment extends Fragment {
     private TextView welcomeTV;
     private EditText editTextSearch;
     private ListView artistListView;
+    private ImageView searchImageView;
 
     private List<Album> albumListMock = new ArrayList<Album>();
 
@@ -49,13 +51,19 @@ public class MainActivityFragment extends Fragment {
         welcomeTV = (TextView)rootView.findViewById(R.id.welcomeTV);
         editTextSearch = (EditText) rootView.findViewById(R.id.editTextSearch);
         artistListView = (ListView) rootView.findViewById(R.id.artistLV);
+        searchImageView = (ImageView) rootView.findViewById(R.id.searchImageView);
 
-        createMockData();
+        searchImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String artistName = editTextSearch.getText().toString();
+                searchForArtist(artistName);
+                Log.i(getString(R.string.LOG_TAG), artistName);
+            }
+        });
+
         mAdapter = new MyAdapter(getActivity(), albumListMock);
-
-
         artistListView.setAdapter(mAdapter);
-
         artistListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -64,8 +72,15 @@ public class MainActivityFragment extends Fragment {
             }
         });
 
-        Log.i(getString(R.string.LOG_TAG), "" + mAdapter.getCount());
         return rootView;
+    }
+
+    private void searchForArtist(String artistName){
+        //Create HTTP-connection
+
+        //Construct query
+
+        //Return results
     }
     private void createMockData() {
         Album myAlbum1 = new Album("Hej", "Grej");

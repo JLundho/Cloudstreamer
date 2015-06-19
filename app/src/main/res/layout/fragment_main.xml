@@ -11,8 +11,7 @@
     <RelativeLayout
         android:id="@+id/welcomeLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="6">
+        android:layout_height="wrap_content">
 
 
         <RelativeLayout
@@ -26,29 +25,32 @@
                 android:id="@+id/welcomeTV"
                 android:text="@string/hello_world"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/searchLayout"
+                android:orientation="horizontal"
+                android:layout_below="@id/welcomeTV">
 
-                 />
+                <EditText
+                    android:id="@+id/editTextSearch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="textMultiLine|textFilter|textVisiblePassword|textNoSuggestions"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
 
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:id="@+id/editTextSearch"
-                android:layout_toLeftOf="@+id/imageView"
-                android:layout_toStartOf="@+id/imageView"
-                android:layout_alignParentBottom="true"
-                android:singleLine="true"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/searchImageView"
+                    android:src="@mipmap/ic_action_action_search"/>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/imageView"
-                android:layout_weight="80"
-                android:layout_alignTop="@id/editTextSearch"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"
-                android:src="@mipmap/ic_action_action_search" />
+            </LinearLayout>
+
+
 
         </RelativeLayout>
 
@@ -56,15 +58,12 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
+        android:layout_height="match_parent">
 
         <ListView
             android:id="@+id/artistLV"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            />
+            android:layout_height="wrap_content" />
 
     </RelativeLayout>
 
