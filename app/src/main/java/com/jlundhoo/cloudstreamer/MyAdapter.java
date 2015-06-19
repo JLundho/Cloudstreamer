@@ -62,8 +62,8 @@ public class MyAdapter extends ArrayAdapter{
 
         Album mAlbum = (Album)albumListMock.get(position);
         //Create widgets and inflate widget-ID
-        itemHolder.artistName.setText(mAlbum.getAlbumName());
-        itemHolder.artistAlbum.setText(mAlbum.getArtistName());
+        //itemHolder.artistName.setText(mAlbum.getAlbumName());
+        //itemHolder.artistAlbum.setText(mAlbum.getArtistName());
         return convertView;
     }
 
