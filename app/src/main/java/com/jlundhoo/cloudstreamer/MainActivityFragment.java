@@ -105,12 +105,11 @@ public class MainActivityFragment extends Fragment {
         @Override
         protected void onPostExecute(ArtistsPager artistPager) {
             super.onPostExecute(artistPager);
-
             myArtistPager = artistPager;
             artistSearchResult = artistPager.artists.items;
 
-            Log.i("Artist", String.valueOf(artistSearchResult.size()));
             if(artistSearchResult.size() > 0) {
+                mAdapter.clear();
                 for(int i = 0; i < artistSearchResult.size(); i++){
                     mAdapter.add(artistSearchResult.get(i));
                 }
