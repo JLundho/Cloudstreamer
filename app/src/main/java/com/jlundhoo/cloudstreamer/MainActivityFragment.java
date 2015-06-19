@@ -1,5 +1,6 @@
 package com.jlundhoo.cloudstreamer;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,6 +79,13 @@ public class MainActivityFragment extends Fragment {
 
     private void searchForArtist(String artistName){
         //Create HTTP-connection
+        HttpURLConnection mConnection;
+        Uri.Builder builder = new Uri.Builder();
+
+        //The connection object to use
+        final String BASE_URI = "https://api.spotify.com";
+
+        String URI = "";
 
         //Construct query
 
