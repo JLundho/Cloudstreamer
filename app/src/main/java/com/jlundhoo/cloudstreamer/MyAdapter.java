@@ -37,6 +37,12 @@ public class MyAdapter extends ArrayAdapter{
     }
 
     @Override
+    public void clear() {
+        super.clear();
+        artistListMock.clear();
+    }
+
+    @Override
     public int getCount(){
         return artistListMock.size();
     }
@@ -60,7 +66,10 @@ public class MyAdapter extends ArrayAdapter{
 
             itemHolder = new ViewHolder();
             itemHolder.artistName = (TextView) convertView.findViewById(R.id.artistTV); //Create textView for artist-name
+
             itemHolder.artistAlbum = (TextView) convertView.findViewById(R.id.albumTV);
+
+            itemHolder.artistImage = (ImageView) convertView.findViewById(R.id.imageIV);
             //itemHolder.artistImage = (TextView) convertView.findViewById(R.id.albumIV);
 
             convertView.setTag(itemHolder); //When a tag has been set, the convertView can retrieve information about the views from the tag in the future
@@ -68,7 +77,6 @@ public class MyAdapter extends ArrayAdapter{
             itemHolder = (ViewHolder) convertView.getTag(); //All information about a view can be retrieved from the View-tag.
         }
         //Needs to be casted, since private implementation makes ArrayList return an object without a special type of Album.
-
 
         Artist mArtist = (Artist)artistListMock.get(position);
         if(mArtist.name != null){

@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,9 +60,6 @@ public class MainActivityFragment extends Fragment {
         artistListView = (ListView) rootView.findViewById(R.id.artistLV);
         searchImageView = (ImageView) rootView.findViewById(R.id.searchImageView);
 
-        mAdapter = new MyAdapter(getActivity(), artistSearchResult);
-        artistListView.setAdapter(mAdapter);
-
         searchImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,20 +69,23 @@ public class MainActivityFragment extends Fragment {
                 mSearchClass.execute(searchString);
             }
         });
+        mAdapter = new MyAdapter(getActivity(), artistSearchResult);
+        artistListView.setAdapter(mAdapter);
 
         artistListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Artist selectedArtist = (Artist) mAdapter.getItem(position);
+                Artist selectedArtist = mAdapter.getItemById(position);
 
-                Toast toast = Toast.makeText(getActivity(), selectedArtist.name, Toast.LENGTH_SHORT);
-                toast.show();
-
-                Intent intent = new Intent(getActivity(), AlbumActivity.class);
-                intent.putExtra(ARTIST_TAG, "Hej"/*selectedArtist.name*/);
+                Intent intent = new Intent(getActivity(), TopTenTrackActivity.class)
+                        .putExtra(Intent.EXTRA_TEXT, selectedArtist.name);
+                intent.putExtra(ARTIST_TAG, selectedArtist.name);
                 startActivity(intent);
             }
         });
+
+
+
         return rootView;
     }
 

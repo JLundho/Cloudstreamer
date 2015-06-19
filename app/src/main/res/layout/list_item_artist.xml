@@ -3,18 +3,32 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/list_item_artist"
-    android:minHeight="?android:attr/listPreferredItemHeight">
+    android:minHeight="?android:attr/listPreferredItemHeight"
+    android:descendantFocusability="blocksDescendants"
+>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/artistTV"
-        android:text="Artist name!"/>
+        android:text="Artist name!"
+        android:focusable="false"
+
+        />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/albumTV"
-        android:text="Album name!"/>
+        android:text="Album name!"
+        android:focusable="false"
+        />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageIV"
+        android:focusable="false"
+        />
 
 </LinearLayout>
