@@ -10,30 +10,39 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import kaaes.spotify.webapi.android.models.Artist;
+
 /**
  * Created by jlundhol on 2015-06-15.
  */
 public class MyAdapter extends ArrayAdapter{
 
-    private List albumListMock;
+    private List artistListMock;
 
 
-    public MyAdapter(Context ctx, List<Album> albumList){
+    public MyAdapter(Context ctx, List<Artist> artistList){
         super(ctx, 0);
-        albumListMock = albumList;
+        artistListMock = artistList;
     }
 
-    public void add(Album mAlbum){
-        albumListMock.add(mAlbum);
+    public void add(Artist mArtist){
+        artistListMock.add(mArtist);
+    }
+
+    public void addArtists(List<Artist> artistList){
+        for(int i = 0; i < artistList.size(); i++){
+            artistListMock.add(artistList.get(i));
+        }
+        notifyDataSetChanged();
     }
 
     @Override
     public int getCount(){
-        return albumListMock.size();
+        return artistListMock.size();
     }
 
-    public Album getItemById(int position){
-        return (Album)albumListMock.get(position);
+    public Artist getItemById(int position){
+        return (Artist)artistListMock.get(position);
     }
 
     /*
@@ -60,10 +69,13 @@ public class MyAdapter extends ArrayAdapter{
         }
         //Needs to be casted, since private implementation makes ArrayList return an object without a special type of Album.
 
-        Album mAlbum = (Album)albumListMock.get(position);
-        //Create widgets and inflate widget-ID
-        //itemHolder.artistName.setText(mAlbum.getAlbumName());
-        //itemHolder.artistAlbum.setText(mAlbum.getArtistName());
+
+        Artist mArtist = (Artist)artistListMock.get(position);
+        if(mArtist.name != null){
+            itemHolder.artistName.setText(mArtist.name);
+        } else {
+            itemHolder.artistName.setText("Hej!");
+        }
         return convertView;
     }
 
