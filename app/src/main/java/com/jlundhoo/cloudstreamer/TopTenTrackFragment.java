@@ -7,8 +7,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,12 +68,34 @@ public class TopTenTrackFragment extends Fragment {
         artistNameTV = (TextView) rootView.findViewById(R.id.topTenArtistTV);
         topTenTrackLV = (ListView) rootView.findViewById(R.id.topTenTrackLV);
 
-        artistNameTV.setText(artistName);
-
         mAdapter = new TopTenAdapter(getActivity(), topTenTrackList);
         topTenTrackLV.setAdapter(mAdapter);
 
-        countryMap.put("country", "US");
+        artistNameTV.setText(artistName);
+
+        //Get locale for user's country.
+        countryMap.put("country", "SE");
+
+        topTenTrackLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Track selectedTrack = (Track) mAdapter.getItemById(position);
+                String url = selectedTrack.album.images.get(0).url;
+
+                Intent intent = new Intent(getActivity(), TrackDetailActivity.class);
+                intent.putExtra(getString(R.string.TRACK_NAME), selectedTrack.name);
+                intent.putExtra(getString(R.string.ALBUM_NAME), selectedTrack.album.name);
+                intent.putExtra(getString(R.string.ALBUM_IMAGE_URL), url);
+                startActivity(intent);
+
+
+
+                Toast toast = Toast.makeText(getActivity(), selectedTrack.name, Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        });
+
+        //Get top ten (or less) tracks, for given artist
         SearchTopTenTracks mSearchTopTenTracks = new SearchTopTenTracks();
         mSearchTopTenTracks.execute(artistID);
 

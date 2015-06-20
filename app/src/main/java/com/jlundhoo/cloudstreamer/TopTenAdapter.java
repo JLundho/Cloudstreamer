@@ -35,6 +35,11 @@ public class TopTenAdapter extends ArrayAdapter{
         topTenTrackList.add(mTrack);
     }
 
+    public Track getItemById(int position){
+        return (Track)topTenTrackList.get(position);
+    }
+
+
     @Override
     public int getCount() {
         return topTenTrackList.size();

@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,8 @@ public class MainActivityFragment extends Fragment {
     private List<Artist> artistSearchResult = new ArrayList<Artist>();
 
     private ArtistAdapter mAdapter; //Create own adapter for additional control
+
+    private String searchString;
 
     static final String ARTIST_TAG = "artist";
     static final String ARTIST_ID = "artist_id";
@@ -64,7 +67,7 @@ public class MainActivityFragment extends Fragment {
         searchImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String searchString = editTextSearch.getText().toString();
+                searchString = editTextSearch.getText().toString();
 
                 //Clear out old artists in ListView to make room for new
                 mAdapter.clear();
@@ -118,6 +121,9 @@ public class MainActivityFragment extends Fragment {
                     mAdapter.add(artistSearchResult.get(i));
                 }
                 mAdapter.notifyDataSetChanged();
+            } else {
+                Toast errorToast = Toast.makeText(getActivity(), "No results found for "+searchString, Toast.LENGTH_SHORT);
+                errorToast.show();
             }
 
         }
