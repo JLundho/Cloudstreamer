@@ -36,7 +36,7 @@ public class MainActivityFragment extends Fragment {
 
     private List<Artist> artistSearchResult = new ArrayList<Artist>();
 
-    private MyAdapter mAdapter; //Create own adapter for additional control
+    private ArtistAdapter mAdapter; //Create own adapter for additional control
 
     static final String ARTIST_TAG = "artist";
 
@@ -69,7 +69,7 @@ public class MainActivityFragment extends Fragment {
                 mSearchClass.execute(searchString);
             }
         });
-        mAdapter = new MyAdapter(getActivity(), artistSearchResult);
+        mAdapter = new ArtistAdapter(getActivity(), artistSearchResult);
         artistListView.setAdapter(mAdapter);
 
         artistListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

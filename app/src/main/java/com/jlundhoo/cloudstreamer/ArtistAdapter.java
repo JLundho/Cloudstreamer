@@ -15,12 +15,12 @@ import kaaes.spotify.webapi.android.models.Artist;
 /**
  * Created by jlundhol on 2015-06-15.
  */
-public class MyAdapter extends ArrayAdapter{
+public class ArtistAdapter extends ArrayAdapter{
 
     private List artistListMock;
 
 
-    public MyAdapter(Context ctx, List<Artist> artistList){
+    public ArtistAdapter(Context ctx, List<Artist> artistList){
         super(ctx, 0);
         artistListMock = artistList;
     }
@@ -58,31 +58,31 @@ public class MyAdapter extends ArrayAdapter{
     //To large part copied from https://www.binpress.com/tutorial/smooth-out-your-listviews-with-a-viewholder/9
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder itemHolder;
+        ViewHolder artistHolder;
 
         //Check if View has already been inflated and can be reused, otherwise inflate it.
         if(convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item_artist, parent, false);
 
-            itemHolder = new ViewHolder();
-            itemHolder.artistName = (TextView) convertView.findViewById(R.id.artistTV); //Create textView for artist-name
+            artistHolder = new ViewHolder();
+            artistHolder.artistName = (TextView) convertView.findViewById(R.id.artistTV); //Create textView for artist-name
 
-            itemHolder.artistAlbum = (TextView) convertView.findViewById(R.id.albumTV);
+            artistHolder.artistAlbum = (TextView) convertView.findViewById(R.id.albumTV);
 
-            itemHolder.artistImage = (ImageView) convertView.findViewById(R.id.imageIV);
+            artistHolder.artistImage = (ImageView) convertView.findViewById(R.id.imageIV);
             //itemHolder.artistImage = (TextView) convertView.findViewById(R.id.albumIV);
 
-            convertView.setTag(itemHolder); //When a tag has been set, the convertView can retrieve information about the views from the tag in the future
+            convertView.setTag(artistHolder); //When a tag has been set, the convertView can retrieve information about the views from the tag in the future
         } else {
-            itemHolder = (ViewHolder) convertView.getTag(); //All information about a view can be retrieved from the View-tag.
+            artistHolder = (ViewHolder) convertView.getTag(); //All information about a view can be retrieved from the View-tag.
         }
         //Needs to be casted, since private implementation makes ArrayList return an object without a special type of Album.
 
         Artist mArtist = (Artist)artistListMock.get(position);
         if(mArtist.name != null){
-            itemHolder.artistName.setText(mArtist.name);
+            artistHolder.artistName.setText(mArtist.name);
         } else {
-            itemHolder.artistName.setText("Hej!");
+            artistHolder.artistName.setText("Hej!");
         }
         return convertView;
     }
