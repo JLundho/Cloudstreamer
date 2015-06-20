@@ -25,6 +25,15 @@ public class TopTenAdapter extends ArrayAdapter{
     }
 
     @Override
+    public void clear() {
+        topTenTrackList.clear();
+    }
+
+    public void add(Track mTrack){
+        topTenTrackList.add(mTrack);
+    }
+
+    @Override
     public int getCount() {
         return topTenTrackList.size();
     }
@@ -51,6 +60,12 @@ public class TopTenAdapter extends ArrayAdapter{
             trackHolder.trackName.setText(mTrack.name);
         } else {
             trackHolder.trackName.setText("No track title");
+        }
+
+        if(mTrack.album != null){
+            trackHolder.albumName.setText(mTrack.album.name);
+        } else {
+            trackHolder.albumName.setText("No album title");
         }
 
         return convertView;
