@@ -1,4 +1,4 @@
-package com.jlundhoo.cloudstreamer;
+package com.jlundhoo.cloudstreamer.fragments;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -10,7 +10,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.jlundhoo.cloudstreamer.R;
+import com.jlundhoo.cloudstreamer.activities.TrackDetailActivity;
+import com.jlundhoo.cloudstreamer.adapters.TopTenAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -90,13 +93,17 @@ public class TopTenTrackFragment extends Fragment {
 
 
 
-                Toast toast = Toast.makeText(getActivity(), selectedTrack.name, Toast.LENGTH_SHORT);
-                toast.show();
+
             }
         });
 
         //Get top ten (or less) tracks, for given artist
         SearchTopTenTracks mSearchTopTenTracks = new SearchTopTenTracks();
+
+        //TODO: Make sure ID remains onResume
+        if(artistID == null){
+            artistID = "6vWDO969PvNqNYHIOW5v0m";
+        }
         mSearchTopTenTracks.execute(artistID);
 
         return rootView;

@@ -1,0 +1,44 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.jlundhoo.cloudstreamer.fragments.TrackDetailActivityFragment"
+    android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/DetailAlbumImageIV"
+            android:src="@mipmap/artist_placeholderimg"
+            android:layout_weight="3"/>
+
+        <RelativeLayout
+            android:id="@+id/ArtistAlbumLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/albumImageIV"
+            android:layout_centerHorizontal="true"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/DetailTrackNameTV"
+                android:text="Song name!"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" />" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/DetailAlbumNameTV"
+                android:text="Album name!"
+                android:layout_below="@+id/DetailTrackNameTV"
+                android:layout_centerHorizontal="true"
+                 />
+
+
+
+        </RelativeLayout>
+
+
+</LinearLayout>

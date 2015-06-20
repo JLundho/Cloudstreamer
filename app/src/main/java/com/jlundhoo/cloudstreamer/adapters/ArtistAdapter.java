@@ -1,4 +1,4 @@
-package com.jlundhoo.cloudstreamer;
+package com.jlundhoo.cloudstreamer.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jlundhoo.cloudstreamer.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

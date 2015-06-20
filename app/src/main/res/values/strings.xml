@@ -13,5 +13,6 @@
 
     <string name="ALBUM_NAME">album_name</string>
     <string name="ALBUM_IMAGE_URL">album_image_url</string>
+    <string name="title_activity_track_detail">TrackDetailActivity</string>
 
 </resources>

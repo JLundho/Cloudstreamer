@@ -1,4 +1,4 @@
-package com.jlundhoo.cloudstreamer;
+package com.jlundhoo.cloudstreamer.fragments;
 
 
 import android.content.Intent;
@@ -15,6 +15,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.jlundhoo.cloudstreamer.R;
+import com.jlundhoo.cloudstreamer.activities.TopTenTrackActivity;
+import com.jlundhoo.cloudstreamer.adapters.ArtistAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
