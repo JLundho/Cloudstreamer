@@ -8,6 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import kaaes.spotify.webapi.android.models.Artist;
@@ -67,30 +69,40 @@ public class ArtistAdapter extends ArrayAdapter{
             artistHolder = new ViewHolder();
             artistHolder.artistName = (TextView) convertView.findViewById(R.id.artistTV); //Create textView for artist-name
 
-            artistHolder.artistAlbum = (TextView) convertView.findViewById(R.id.albumTV);
-
             artistHolder.artistImage = (ImageView) convertView.findViewById(R.id.imageIV);
-            //itemHolder.artistImage = (TextView) convertView.findViewById(R.id.albumIV);
+
 
             convertView.setTag(artistHolder); //When a tag has been set, the convertView can retrieve information about the views from the tag in the future
         } else {
             artistHolder = (ViewHolder) convertView.getTag(); //All information about a view can be retrieved from the View-tag.
         }
-        //Needs to be casted, since private implementation makes ArrayList return an object without a special type of Album.
 
+        //Needs to be casted, since private implementation makes ArrayList return an object without a special type of Artist.
         Artist mArtist = (Artist)artistListMock.get(position);
-        if(mArtist.name != null){
+
+        //Add artist name + image thumbnail
+        if(mArtist != null){
             artistHolder.artistName.setText(mArtist.name);
-        } else {
-            artistHolder.artistName.setText("Hej!");
+
+            //Some images take a while to load, Picasso meanwhile uses a placeholder-image.
+            if(mArtist.images.size() > 0){
+                Picasso.with(getContext())
+                        .load(mArtist.images.get(0).url)
+                        .placeholder(R.mipmap.artist_placeholderimg)
+                        .resize(250, 250)
+                        .into(artistHolder.artistImage);
+            }
         }
+
+
         return convertView;
     }
 
+
+
     static class ViewHolder {
         TextView artistName;
-        TextView artistAlbum;
-        ImageView artistImage; //Not yet implemented
+        ImageView artistImage;
     }
 
 

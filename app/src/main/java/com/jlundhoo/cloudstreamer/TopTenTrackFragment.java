@@ -54,6 +54,7 @@ public class TopTenTrackFragment extends Fragment {
         Intent intent = getActivity().getIntent();  //Retrieves the activity, to receive the context from which to get intent
         artistName = intent.getStringExtra(getString(R.string.ARTIST_NAME));
         artistID = intent.getStringExtra(getString(R.string.ARTIST_ID));
+
     }
 
     @Override

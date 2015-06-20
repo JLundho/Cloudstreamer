@@ -8,6 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import kaaes.spotify.webapi.android.models.Track;
@@ -67,6 +69,20 @@ public class TopTenAdapter extends ArrayAdapter{
         } else {
             trackHolder.albumName.setText("No album title");
         }
+
+        if(mTrack != null){
+            trackHolder.trackName.setText(mTrack.name);
+
+            //Some images take a while to load, Picasso meanwhile uses a placeholder-image.
+            if(mTrack.album.images.size() > 0){
+                Picasso.with(getContext())
+                        .load(mTrack.album.images.get(0).url)
+                        .placeholder(R.mipmap.artist_placeholderimg)
+                        .resize(250, 250)
+                        .into(trackHolder.albumImage);
+            }
+        }
+
 
         return convertView;
     }

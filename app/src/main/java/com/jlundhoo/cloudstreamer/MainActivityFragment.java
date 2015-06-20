@@ -66,6 +66,8 @@ public class MainActivityFragment extends Fragment {
             public void onClick(View v) {
                 String searchString = editTextSearch.getText().toString();
 
+                //Clear out old artists in ListView to make room for new
+                mAdapter.clear();
                 SearchClass mSearchClass = new SearchClass();
                 mSearchClass.execute(searchString);
             }
