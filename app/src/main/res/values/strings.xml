@@ -5,4 +5,9 @@
 
     <string name="LOG_TAG">Cloudstreamer</string>
     <string name="title_activity_album">AlbumActivity</string>
+
+    <string name="ARTIST_NAME">artist</string>
+    <string name="ARTIST_ID">artist_id</string>
+
+
 </resources>

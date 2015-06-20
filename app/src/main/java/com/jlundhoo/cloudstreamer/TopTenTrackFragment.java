@@ -1,6 +1,7 @@
 package com.jlundhoo.cloudstreamer;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,9 +11,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import kaaes.spotify.webapi.android.SpotifyApi;
+import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Track;
+import kaaes.spotify.webapi.android.models.Tracks;
 
 
 /**
@@ -27,6 +33,14 @@ public class TopTenTrackFragment extends Fragment {
     private TopTenAdapter mAdapter;
 
     private String artistName;
+    private String artistID;
+
+    Map<String, Object> countryMap = new HashMap<>();
+
+
+    private String countryName = "Sweden";
+    private String countryCode= "SE";
+
     static final String ARTIST_TAG = "artist";
 
     public TopTenTrackFragment() {
@@ -38,7 +52,8 @@ public class TopTenTrackFragment extends Fragment {
 
         topTenTrackList = new ArrayList<Track>();
         Intent intent = getActivity().getIntent();  //Retrieves the activity, to receive the context from which to get intent
-        artistName = intent.getStringExtra(Intent.EXTRA_TEXT);
+        artistName = intent.getStringExtra(getString(R.string.ARTIST_NAME));
+        artistID = intent.getStringExtra(getString(R.string.ARTIST_ID));
     }
 
     @Override
@@ -55,6 +70,33 @@ public class TopTenTrackFragment extends Fragment {
         mAdapter = new TopTenAdapter(getActivity(), topTenTrackList);
         topTenTrackLV.setAdapter(mAdapter);
 
-        return inflater.inflate(R.layout.fragment_toptentracks, container, false);
+        countryMap.put("country", "US");
+        SearchTopTenTracks mSearchTopTenTracks = new SearchTopTenTracks();
+        mSearchTopTenTracks.execute(artistID);
+
+        return rootView;
     }
+
+    public class SearchTopTenTracks extends AsyncTask<String, Void, Tracks> {
+        SpotifyApi api = new SpotifyApi();
+        SpotifyService spotify = api.getService();
+
+        @Override
+        protected Tracks doInBackground(String...params) {
+            String artistID = params[0];
+            return spotify.getArtistTopTrack(artistID, countryMap);
+        }
+
+        @Override
+        protected void onPostExecute(Tracks tracks) {
+            super.onPostExecute(tracks);
+            for (Track track : tracks.tracks)
+            {
+                mAdapter.add(track);
+            }
+            mAdapter.notifyDataSetChanged();
+        }
+
+    }
+
 }

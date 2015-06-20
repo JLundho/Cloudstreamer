@@ -39,6 +39,7 @@ public class MainActivityFragment extends Fragment {
     private ArtistAdapter mAdapter; //Create own adapter for additional control
 
     static final String ARTIST_TAG = "artist";
+    static final String ARTIST_ID = "artist_id";
 
     public MainActivityFragment() {
 
@@ -79,6 +80,8 @@ public class MainActivityFragment extends Fragment {
 
                 Intent intent = new Intent(getActivity(), TopTenTrackActivity.class)
                         .putExtra(Intent.EXTRA_TEXT, selectedArtist.name);
+
+                intent.putExtra(ARTIST_ID, selectedArtist.id);
                 intent.putExtra(ARTIST_TAG, selectedArtist.name);
                 startActivity(intent);
             }

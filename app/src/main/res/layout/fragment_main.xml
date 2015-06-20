@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:focusableInTouchMode="true"
-            android:descendantFocusability="beforeDescendants" >  What does this do? -->
+            android:descendantFocusability="beforeDescendants" >
 
             <TextView
                 android:id="@+id/welcomeTV"
