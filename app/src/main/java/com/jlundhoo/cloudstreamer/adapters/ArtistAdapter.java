@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.jlundhoo.cloudstreamer.R;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import kaaes.spotify.webapi.android.models.Artist;
@@ -20,10 +21,10 @@ import kaaes.spotify.webapi.android.models.Artist;
  */
 public class ArtistAdapter extends ArrayAdapter{
 
-    private List artistListMock;
+    private ArrayList<Artist> artistListMock = new ArrayList<Artist>();
 
 
-    public ArtistAdapter(Context ctx, List<Artist> artistList){
+    public ArtistAdapter(Context ctx, ArrayList<Artist> artistList){
         super(ctx, 0);
         artistListMock = artistList;
     }
@@ -31,6 +32,7 @@ public class ArtistAdapter extends ArrayAdapter{
     public void add(Artist mArtist){
         artistListMock.add(mArtist);
     }
+
 
     public void addArtists(List<Artist> artistList){
         for(int i = 0; i < artistList.size(); i++){

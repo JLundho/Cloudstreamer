@@ -16,12 +16,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jlundhoo.cloudstreamer.ParcelableArtist;
 import com.jlundhoo.cloudstreamer.R;
 import com.jlundhoo.cloudstreamer.activities.TopTenTrackActivity;
 import com.jlundhoo.cloudstreamer.adapters.ArtistAdapter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
@@ -39,7 +39,10 @@ public class MainActivityFragment extends Fragment {
     private ListView artistListView;
     private ImageView searchImageView;
 
-    private List<Artist> artistSearchResult = new ArrayList<Artist>();
+    private ArrayList<Artist> artistSearchResult = new ArrayList<Artist>();
+
+    //ArrayList of downsized-artist objects, used to persist data between device reconfigurations.
+    private ArrayList<ParcelableArtist> parcelableArtistList = new ArrayList<ParcelableArtist>();
 
     private ArtistAdapter mAdapter; //Create own adapter for additional control
 
@@ -55,6 +58,35 @@ public class MainActivityFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(getString(R.string.ARTISTLIST_PARCEL), parcelableArtistList);
+    }
+
+    /**
+     * Good idea, but work on adding whole Artist-objects to Parcelable.
+     */
+    @Override
+    public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if(savedInstanceState != null){
+            ArrayList<ParcelableArtist> restoredArtists = savedInstanceState.getParcelableArrayList(getString(R.string.ARTISTLIST_PARCEL));
+            for(ParcelableArtist pArtist : restoredArtists){
+
+                Artist mArtist = new Artist();
+                mArtist.id = pArtist.getArtistID();
+                mArtist.name = pArtist.getArtistName();
+                mArtist.images.get(0).url = pArtist.getArtistImageURL();
+                
+                artistSearchResult.add(mArtist);
+            }
+
+        }
+
+
     }
 
     @Override
@@ -117,14 +149,19 @@ public class MainActivityFragment extends Fragment {
             super.onPostExecute(artistPager);
 
             myArtistPager = artistPager;
-            artistSearchResult = artistPager.artists.items;
+            artistSearchResult = (ArrayList)artistPager.artists.items;
 
             Log.i("Artist", String.valueOf(artistSearchResult.size()));
             if (artistSearchResult.size() > 0) {
+                //Adds search-results to Adapter for current use
+
+                mAdapter.addArtists(artistSearchResult);
+
                 for (int i = 0; i < artistSearchResult.size(); i++) {
-                    mAdapter.add(artistSearchResult.get(i));
+                    //Adds search-results to parcelable ArrayList, so they can be restored on device reconfiguration
+                    addParcelableArtist(artistSearchResult.get(i));
                 }
-                mAdapter.notifyDataSetChanged();
+                //notifyDataSetChanged is called internally within adapter.
             } else {
                 Toast errorToast = Toast.makeText(getActivity(), "No results found for "+searchString, Toast.LENGTH_SHORT);
                 errorToast.show();
@@ -132,6 +169,21 @@ public class MainActivityFragment extends Fragment {
 
         }
 
+    }
+
+    private void addParcelableArtist(Artist artist){
+        try{
+            ParcelableArtist mParcelableArtist = new ParcelableArtist();
+            mParcelableArtist.setArtistID(artist.id);
+            mParcelableArtist.setArtistName(artist.name);
+            mParcelableArtist.setArtistImageURL(artist.images.get(0).url);
+
+            parcelableArtistList.add(mParcelableArtist);
+        } catch (Exception e){
+            e.printStackTrace();
+
+
+        }
     }
 
 

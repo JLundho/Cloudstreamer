@@ -15,4 +15,6 @@
     <string name="ALBUM_IMAGE_URL">album_image_url</string>
     <string name="title_activity_track_detail">TrackDetailActivity</string>
 
+    <string name="ARTISTLIST_PARCEL">artistlist_parcel</string>
+
 </resources>
