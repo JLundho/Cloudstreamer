@@ -16,8 +16,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.jlundhoo.cloudstreamer.ParcelableArtist;
 import com.jlundhoo.cloudstreamer.R;
+import com.jlundhoo.cloudstreamer.SimpleArtist;
 import com.jlundhoo.cloudstreamer.activities.TopTenTrackActivity;
 import com.jlundhoo.cloudstreamer.adapters.ArtistAdapter;
 
@@ -42,7 +42,7 @@ public class MainActivityFragment extends Fragment {
     private ArrayList<Artist> artistSearchResult = new ArrayList<Artist>();
 
     //ArrayList of downsized-artist objects, used to persist data between device reconfigurations.
-    private ArrayList<ParcelableArtist> parcelableArtistList = new ArrayList<ParcelableArtist>();
+    private ArrayList<SimpleArtist> parcelableArtistList = new ArrayList<SimpleArtist>();
 
     private ArtistAdapter mAdapter; //Create own adapter for additional control
 
@@ -73,17 +73,16 @@ public class MainActivityFragment extends Fragment {
     public void onViewStateRestored(Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
         if(savedInstanceState != null){
-            ArrayList<ParcelableArtist> restoredArtists = savedInstanceState.getParcelableArrayList(getString(R.string.ARTISTLIST_PARCEL));
-            for(ParcelableArtist pArtist : restoredArtists){
+            ArrayList<SimpleArtist> restoredArtists = savedInstanceState.getParcelableArrayList(getString(R.string.ARTISTLIST_PARCEL));
 
+            for(SimpleArtist simpleArtist : restoredArtists) {
                 Artist mArtist = new Artist();
-                mArtist.id = pArtist.getArtistID();
-                mArtist.name = pArtist.getArtistName();
-                mArtist.images.get(0).url = pArtist.getArtistImageURL();
-                
-                artistSearchResult.add(mArtist);
-            }
+                mArtist.id = simpleArtist.id;
+                mArtist.name = simpleArtist.name;
+                mArtist.images = simpleArtist.images;
 
+                mAdapter.add(mArtist);
+            }
         }
 
 
@@ -159,7 +158,13 @@ public class MainActivityFragment extends Fragment {
 
                 for (int i = 0; i < artistSearchResult.size(); i++) {
                     //Adds search-results to parcelable ArrayList, so they can be restored on device reconfiguration
-                    addParcelableArtist(artistSearchResult.get(i));
+                    SimpleArtist mSimpleArtist = new SimpleArtist();
+
+                    mSimpleArtist.id = artistSearchResult.get(i).id;
+                    mSimpleArtist.name = artistSearchResult.get(i).name;
+                    mSimpleArtist.images = artistSearchResult.get(i).images;
+
+                    parcelableArtistList.add(mSimpleArtist);
                 }
                 //notifyDataSetChanged is called internally within adapter.
             } else {
@@ -168,25 +173,7 @@ public class MainActivityFragment extends Fragment {
             }
 
         }
-
     }
-
-    private void addParcelableArtist(Artist artist){
-        try{
-            ParcelableArtist mParcelableArtist = new ParcelableArtist();
-            mParcelableArtist.setArtistID(artist.id);
-            mParcelableArtist.setArtistName(artist.name);
-            mParcelableArtist.setArtistImageURL(artist.images.get(0).url);
-
-            parcelableArtistList.add(mParcelableArtist);
-        } catch (Exception e){
-            e.printStackTrace();
-
-
-        }
-    }
-
-
 }
 
 
