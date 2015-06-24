@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jlundhoo.cloudstreamer.R;
+import com.jlundhoo.cloudstreamer.SimpleTrack;
 import com.jlundhoo.cloudstreamer.activities.TrackDetailActivity;
 import com.jlundhoo.cloudstreamer.adapters.TopTenAdapter;
 
@@ -35,6 +36,10 @@ public class TopTenTrackFragment extends Fragment {
     private ListView topTenTrackLV;
 
     private List<Track> topTenTrackList;
+
+    //ArrayList of downsized-artist objects, used to persist data between device reconfigurations.
+    private ArrayList<SimpleTrack> parcelableTrackList = new ArrayList<SimpleTrack>();
+
     private TopTenAdapter mAdapter;
 
     private String artistName;
@@ -49,6 +54,30 @@ public class TopTenTrackFragment extends Fragment {
     static final String ARTIST_TAG = "artist";
 
     public TopTenTrackFragment() {
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //Persist downsized Track-objects with necessary information after device reconfiguration
+        outState.putParcelableArrayList(getString(R.string.TRACKLIST_PARCEL), parcelableTrackList);
+    }
+
+    @Override
+    public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if(savedInstanceState != null){
+            ArrayList<SimpleTrack> restoredTracks = savedInstanceState.getParcelableArrayList(getString(R.string.TRACKLIST_PARCEL));
+
+            //Recreates downsized Track-objects with necessary information after device reconfiguration
+            for (SimpleTrack track : restoredTracks)
+            {
+                mAdapter.add((Track)track);
+            }
+            mAdapter.notifyDataSetChanged();
+        }
+
+
     }
 
     @Override
@@ -91,9 +120,6 @@ public class TopTenTrackFragment extends Fragment {
                 intent.putExtra(getString(R.string.ALBUM_IMAGE_URL), url);
                 startActivity(intent);
 
-
-
-
             }
         });
 
@@ -122,11 +148,22 @@ public class TopTenTrackFragment extends Fragment {
         @Override
         protected void onPostExecute(Tracks tracks) {
             super.onPostExecute(tracks);
-            for (Track track : tracks.tracks)
-            {
-                mAdapter.add(track);
+
+            topTenTrackList = (ArrayList)tracks.tracks;
+
+            for (int i = 0; i < topTenTrackList.size(); i++) {
+                //Adds search-results to parcelable ArrayList, so they can be restored on device reconfiguration
+                SimpleTrack mSimpleTrack = new SimpleTrack();
+                mAdapter.add(topTenTrackList.get(i));
+
+                mSimpleTrack.name = topTenTrackList.get(i).name;
+                mSimpleTrack.album = topTenTrackList.get(i).album;
+                mSimpleTrack.album.images = topTenTrackList.get(i).album.images;
+
+                parcelableTrackList.add(mSimpleTrack);
             }
             mAdapter.notifyDataSetChanged();
+
         }
 
     }
