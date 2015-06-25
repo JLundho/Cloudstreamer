@@ -16,5 +16,6 @@
     <string name="title_activity_track_detail">TrackDetailActivity</string>
 
     <string name="ARTISTLIST_PARCEL">artistlist_parcel</string>
+    <string name="TRACKLIST_PARCEL">tracklist_parcel</string>
 
 </resources>
