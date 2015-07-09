@@ -74,7 +74,7 @@ public class ArtistFragment extends Fragment {
         }
     }
 
-    
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -130,17 +130,19 @@ public class ArtistFragment extends Fragment {
         @Override
         protected void onPostExecute(ArtistsPager artistPager) {
             super.onPostExecute(artistPager);
-
             myArtistPager = artistPager;
             artistSearchResult = (ArrayList)artistPager.artists.items;
+
             if(artistSearchResult.isEmpty()) {
                 Toast.makeText(getActivity(), "No artist found", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            mAdapter.addArtists(artistSearchResult);
+            //Clears previously saved artists, so as not to stack them on the old list.
+            parcelableArtistList.clear();
 
             for (int i = 0; i < artistSearchResult.size(); i++) {
+                mAdapter.add(artistSearchResult.get(i));
                 //Adds search-results to parcelable ArrayList, so they can be restored on device reconfiguration
                 SimpleArtist mSimpleArtist = new SimpleArtist();
 
@@ -150,6 +152,7 @@ public class ArtistFragment extends Fragment {
 
                 parcelableArtistList.add(mSimpleArtist);
             }
+            mAdapter.notifyDataSetChanged();
 
         }
     }

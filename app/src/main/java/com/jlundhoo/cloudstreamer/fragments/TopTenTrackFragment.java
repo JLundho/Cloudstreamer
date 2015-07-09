@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jlundhoo.cloudstreamer.R;
 import com.jlundhoo.cloudstreamer.SimpleTrack;
@@ -46,8 +47,6 @@ public class TopTenTrackFragment extends Fragment {
     private String artistID;
 
     private static String TRACKLIST_PARCEL = "tracklist_parcel";
-    private static String ARTIST_ID = "artist_id";
-    private static String ARTIST_NAME = "artist_name";
 
     private static String TRACK_NAME = "track_name";
     private static String ALBUM_NAME = "album_name";
@@ -60,24 +59,12 @@ public class TopTenTrackFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         //Persist downsized Track-objects with necessary information after device reconfiguration
-        outState.putParcelableArrayList(TRACKLIST_PARCEL, parcelableTrackList);
+        //outState.putParcelableArrayList(TRACKLIST_PARCEL, parcelableTrackList);
     }
 
     @Override
     public void onViewStateRestored(Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
-        if(savedInstanceState != null){
-            ArrayList<SimpleTrack> restoredTracks = savedInstanceState.getParcelableArrayList(TRACKLIST_PARCEL);
-            parcelableTrackList = restoredTracks;
-            //Recreates downsized Track-objects with necessary information after device reconfiguration
-            for (SimpleTrack track : parcelableTrackList)
-            {
-                mAdapter.add((Track)track);
-            }
-            mAdapter.notifyDataSetChanged();
-        }
-
-
     }
 
     @Override
@@ -86,8 +73,9 @@ public class TopTenTrackFragment extends Fragment {
 
         topTenTrackList = new ArrayList<Track>();
         Intent intent = getActivity().getIntent();  //Retrieves the activity, to receive the context from which to get intent
-        artistName = intent.getStringExtra(ArtistFragment.ARTIST_NAME);
-        artistID = intent.getStringExtra(ArtistFragment.ARTIST_ID);
+        this.artistName = intent.getStringExtra(ArtistFragment.ARTIST_NAME);
+        this.artistID = intent.getStringExtra(ArtistFragment.ARTIST_ID);
+
 
         getActivity().setTitle(artistName);
     }
@@ -97,13 +85,11 @@ public class TopTenTrackFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_toptentracks, container, false);
 
-        artistNameTV = (TextView) rootView.findViewById(R.id.artistTV);
         topTenTrackLV = (ListView) rootView.findViewById(R.id.topTenTrackLV);
 
         mAdapter = new TopTenAdapter(getActivity(), topTenTrackList);
         topTenTrackLV.setAdapter(mAdapter);
 
-        artistNameTV.setText(artistName);
 
         topTenTrackLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -142,10 +128,15 @@ public class TopTenTrackFragment extends Fragment {
         protected void onPostExecute(Tracks tracks) {
             super.onPostExecute(tracks);
 
+            if(tracks.tracks.size() < 1){
+                getActivity().finish();
+                Toast toast = Toast.makeText(getActivity(), "No top tracks found", Toast.LENGTH_SHORT);
+                toast.show();
+            }
             topTenTrackList = (ArrayList)tracks.tracks;
 
-            mAdapter.addTracks(topTenTrackList);
-            for (int i = 0; i < topTenTrackList.size(); i++) {
+            for (int i = 0; i < topTenTrackList.size() | i == 9; i++) {
+                mAdapter.add(topTenTrackList.get(i));
                 //Adds search-results to parcelable ArrayList, so they can be restored on device reconfiguration
                 SimpleTrack mSimpleTrack = new SimpleTrack();
 
