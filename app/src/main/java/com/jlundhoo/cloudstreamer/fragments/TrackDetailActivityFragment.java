@@ -26,18 +26,20 @@ public class TrackDetailActivityFragment extends Fragment {
     private TextView albumNameTV;
     private ImageView albumImageIV;
 
-    public TrackDetailActivityFragment() {
-    }
+    private static String TRACK_NAME = "track_name";
+    private static String ALBUM_NAME = "album_name";
+    private static String ALBUM_IMAGE_URL = "album_image_url";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getActivity().getIntent();  //Retrieves the activity, to receive the context from which to get intent
 
-        albumImageURL = intent.getStringExtra(getString(R.string.ALBUM_IMAGE_URL));
-        trackName = intent.getStringExtra(getString(R.string.TRACK_NAME));
-        albumName = intent.getStringExtra(getString(R.string.ALBUM_NAME));
+        albumImageURL = intent.getStringExtra(ALBUM_IMAGE_URL);
+        trackName = intent.getStringExtra(TRACK_NAME);
+        albumName = intent.getStringExtra(ALBUM_NAME);
 
+        getActivity().setTitle(trackName);
 
     }
 
@@ -52,7 +54,7 @@ public class TrackDetailActivityFragment extends Fragment {
 
         Picasso.with(getActivity().getApplicationContext())
                 .load(albumImageURL)
-                .placeholder(R.mipmap.artist_placeholderimg)
+                .placeholder(R.drawable.artist_placeholderimg)
                 .into(albumImageIV);
         trackNameTV.setText(trackName);
         albumNameTV.setText(albumName);

@@ -8,12 +8,12 @@ import android.view.MenuItem;
 import com.jlundhoo.cloudstreamer.R;
 
 
-public class MainActivity extends ActionBarActivity {
+public class ArtistActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_artist);
     }
 
 

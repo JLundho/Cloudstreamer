@@ -8,7 +8,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/DetailAlbumImageIV"
-            android:src="@mipmap/artist_placeholderimg"
             android:layout_weight="3"/>
 
         <RelativeLayout

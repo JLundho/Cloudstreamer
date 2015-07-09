@@ -27,16 +27,15 @@ public class TopTenTrackActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        // overwrite "Home"-Button (Navigation Button on left) to emulate the behaviour of
+        // the hardware back-button so that the state of the previous activity is retained
+        if (item.getItemId() == android.R.id.home) {
+            this.onBackPressed();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }

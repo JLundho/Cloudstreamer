@@ -21,22 +21,22 @@ import kaaes.spotify.webapi.android.models.Artist;
  */
 public class ArtistAdapter extends ArrayAdapter{
 
-    private ArrayList<Artist> artistListMock = new ArrayList<Artist>();
+    private ArrayList<Artist> artistList = new ArrayList<Artist>();
 
 
     public ArtistAdapter(Context ctx, ArrayList<Artist> artistList){
         super(ctx, 0);
-        artistListMock = artistList;
+        this.artistList = artistList;
     }
 
     public void add(Artist mArtist){
-        artistListMock.add(mArtist);
+        artistList.add(mArtist);
     }
 
 
     public void addArtists(List<Artist> artistList){
         for(int i = 0; i < artistList.size(); i++){
-            artistListMock.add(artistList.get(i));
+            this.artistList.add(artistList.get(i));
         }
         notifyDataSetChanged();
     }
@@ -44,64 +44,58 @@ public class ArtistAdapter extends ArrayAdapter{
     @Override
     public void clear() {
         super.clear();
-        artistListMock.clear();
+        artistList.clear();
     }
 
     @Override
     public int getCount(){
-        return artistListMock.size();
+        return artistList.size();
     }
 
     public Artist getItemById(int position){
-        return (Artist)artistListMock.get(position);
+        return (Artist)artistList.get(position);
     }
 
     /*
     //The adapter would inflate the layout for each row in its getView() method and assign the data to the individual views in the row.
+    //View Holder pattern is to large part copied from https://www.binpress.com/tutorial/smooth-out-your-listviews-with-a-viewholder/9
     */
-
-    //To large part copied from https://www.binpress.com/tutorial/smooth-out-your-listviews-with-a-viewholder/9
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder artistHolder;
+        ViewHolder holder;
 
-        //Check if View has already been inflated and can be reused, otherwise inflate it.
+        //Check if View has already been inflated and can be reused, otherwise inflate it. Using View Holder pattern.
         if(convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item_artist, parent, false);
 
-            artistHolder = new ViewHolder();
-            artistHolder.artistName = (TextView) convertView.findViewById(R.id.artistTV); //Create textView for artist-name
-
-            artistHolder.artistImage = (ImageView) convertView.findViewById(R.id.imageIV);
-
-
-            convertView.setTag(artistHolder); //When a tag has been set, the convertView can retrieve information about the views from the tag in the future
+            holder = new ViewHolder();
+            holder.artistName = (TextView) convertView.findViewById(R.id.artistTV); //Create textView for artist-name
+            holder.artistImage = (ImageView) convertView.findViewById(R.id.imageIV);
+            convertView.setTag(holder);
         } else {
-            artistHolder = (ViewHolder) convertView.getTag(); //All information about a view can be retrieved from the View-tag.
+            holder = (ViewHolder) convertView.getTag();
         }
 
-        //Needs to be casted, since private implementation makes ArrayList return an object without a special type of Artist.
-        Artist mArtist = (Artist)artistListMock.get(position);
+        //Needs to be casted.  since private implementation makes ArrayList return an object without a special type of Artist.
+        Artist mArtist = (Artist)artistList.get(position);
 
         //Add artist name + image thumbnail
         if(mArtist != null){
-            artistHolder.artistName.setText(mArtist.name);
+            holder.artistName.setText(mArtist.name);
 
             //Some images take a while to load, Picasso meanwhile uses a placeholder-image.
             if(mArtist.images.size() > 0){
                 Picasso.with(getContext())
                         .load(mArtist.images.get(0).url)
-                        .placeholder(R.mipmap.artist_placeholderimg)
+                        .placeholder(R.drawable.artist_placeholderimg)
                         .resize(250, 250)
-                        .into(artistHolder.artistImage);
+                        .into(holder.artistImage);
             }
         }
 
 
         return convertView;
     }
-
-
 
     static class ViewHolder {
         TextView artistName;

@@ -45,32 +45,32 @@ public class TopTenTrackFragment extends Fragment {
     private String artistName;
     private String artistID;
 
+    private static String TRACKLIST_PARCEL = "tracklist_parcel";
+    private static String ARTIST_ID = "artist_id";
+    private static String ARTIST_NAME = "artist_name";
+
+    private static String TRACK_NAME = "track_name";
+    private static String ALBUM_NAME = "album_name";
+    private static String ALBUM_IMAGE_URL = "album_image_url";
+
     Map<String, Object> countryMap = new HashMap<>();
 
-
-    private String countryName = "Sweden";
-    private String countryCode= "SE";
-
-    static final String ARTIST_TAG = "artist";
-
-    public TopTenTrackFragment() {
-    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         //Persist downsized Track-objects with necessary information after device reconfiguration
-        outState.putParcelableArrayList(getString(R.string.TRACKLIST_PARCEL), parcelableTrackList);
+        outState.putParcelableArrayList(TRACKLIST_PARCEL, parcelableTrackList);
     }
 
     @Override
     public void onViewStateRestored(Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
         if(savedInstanceState != null){
-            ArrayList<SimpleTrack> restoredTracks = savedInstanceState.getParcelableArrayList(getString(R.string.TRACKLIST_PARCEL));
-
+            ArrayList<SimpleTrack> restoredTracks = savedInstanceState.getParcelableArrayList(TRACKLIST_PARCEL);
+            parcelableTrackList = restoredTracks;
             //Recreates downsized Track-objects with necessary information after device reconfiguration
-            for (SimpleTrack track : restoredTracks)
+            for (SimpleTrack track : parcelableTrackList)
             {
                 mAdapter.add((Track)track);
             }
@@ -86,18 +86,18 @@ public class TopTenTrackFragment extends Fragment {
 
         topTenTrackList = new ArrayList<Track>();
         Intent intent = getActivity().getIntent();  //Retrieves the activity, to receive the context from which to get intent
-        artistName = intent.getStringExtra(getString(R.string.ARTIST_NAME));
-        artistID = intent.getStringExtra(getString(R.string.ARTIST_ID));
+        artistName = intent.getStringExtra(ArtistFragment.ARTIST_NAME);
+        artistID = intent.getStringExtra(ArtistFragment.ARTIST_ID);
 
+        getActivity().setTitle(artistName);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        //rootView is created by inflating the main-view XML for that Activity/fragment
         View rootView = inflater.inflate(R.layout.fragment_toptentracks, container, false);
 
-        artistNameTV = (TextView) rootView.findViewById(R.id.topTenArtistTV);
+        artistNameTV = (TextView) rootView.findViewById(R.id.artistTV);
         topTenTrackLV = (ListView) rootView.findViewById(R.id.topTenTrackLV);
 
         mAdapter = new TopTenAdapter(getActivity(), topTenTrackList);
@@ -105,35 +105,28 @@ public class TopTenTrackFragment extends Fragment {
 
         artistNameTV.setText(artistName);
 
-        //Get locale for user's country.
-        countryMap.put("country", "SE");
-
         topTenTrackLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Track selectedTrack = (Track) mAdapter.getItemById(position);
-                String url = selectedTrack.album.images.get(0).url;
+                String url = selectedTrack.album.images.get(0).url;             //URL for the album image
 
                 Intent intent = new Intent(getActivity(), TrackDetailActivity.class);
-                intent.putExtra(getString(R.string.TRACK_NAME), selectedTrack.name);
-                intent.putExtra(getString(R.string.ALBUM_NAME), selectedTrack.album.name);
-                intent.putExtra(getString(R.string.ALBUM_IMAGE_URL), url);
+                intent.putExtra(TRACK_NAME, selectedTrack.name);
+                intent.putExtra(ALBUM_NAME, selectedTrack.album.name);
+                intent.putExtra(ALBUM_IMAGE_URL, url);
                 startActivity(intent);
-
             }
         });
 
-        //Get top ten (or less) tracks, for given artist
+        //Get top ten (or less) tracks, for given artist, using the US-locale.
+        countryMap.put("country", "US");
         SearchTopTenTracks mSearchTopTenTracks = new SearchTopTenTracks();
-
-        //TODO: Make sure ID remains onResume
-        if(artistID == null){
-            artistID = "6vWDO969PvNqNYHIOW5v0m";
-        }
         mSearchTopTenTracks.execute(artistID);
 
         return rootView;
     }
+
 
     public class SearchTopTenTracks extends AsyncTask<String, Void, Tracks> {
         SpotifyApi api = new SpotifyApi();
@@ -151,10 +144,10 @@ public class TopTenTrackFragment extends Fragment {
 
             topTenTrackList = (ArrayList)tracks.tracks;
 
+            mAdapter.addTracks(topTenTrackList);
             for (int i = 0; i < topTenTrackList.size(); i++) {
                 //Adds search-results to parcelable ArrayList, so they can be restored on device reconfiguration
                 SimpleTrack mSimpleTrack = new SimpleTrack();
-                mAdapter.add(topTenTrackList.get(i));
 
                 mSimpleTrack.name = topTenTrackList.get(i).name;
                 mSimpleTrack.album = topTenTrackList.get(i).album;

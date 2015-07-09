@@ -34,6 +34,15 @@ public class TopTenAdapter extends ArrayAdapter{
 
     public void add(Track mTrack){
         topTenTrackList.add(mTrack);
+        notifyDataSetChanged();
+    }
+
+
+    public void addTracks(List<Track> trackList){
+        for(Track track : trackList){
+            topTenTrackList.add(track);
+        }
+        notifyDataSetChanged();
     }
 
     public Track getItemById(int position){
@@ -83,7 +92,7 @@ public class TopTenAdapter extends ArrayAdapter{
             if(mTrack.album.images.size() > 0){
                 Picasso.with(getContext())
                         .load(mTrack.album.images.get(0).url)
-                        .placeholder(R.mipmap.artist_placeholderimg)
+                        .placeholder(R.drawable.artist_placeholderimg)
                         .resize(250, 250)
                         .into(trackHolder.albumImage);
             }

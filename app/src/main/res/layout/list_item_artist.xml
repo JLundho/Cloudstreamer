@@ -5,7 +5,8 @@
     android:id="@+id/list_item_artist"
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:descendantFocusability="blocksDescendants"
->
+
+    >
 
     <ImageView
         android:layout_width="wrap_content"
