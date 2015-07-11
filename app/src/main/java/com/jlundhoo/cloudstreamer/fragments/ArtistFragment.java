@@ -11,12 +11,13 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.jlundhoo.cloudstreamer.R;
-import com.jlundhoo.cloudstreamer.spotify.SearchArtist;
 import com.jlundhoo.cloudstreamer.SimpleArtist;
 import com.jlundhoo.cloudstreamer.activities.TopTenTrackActivity;
 import com.jlundhoo.cloudstreamer.adapters.ArtistAdapter;
+import com.jlundhoo.cloudstreamer.spotify.SearchArtist;
 
 import java.util.ArrayList;
 
@@ -77,8 +78,15 @@ public class ArtistFragment extends Fragment {
         searchImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SearchArtist mSearchClass = new SearchArtist(getActivity());
-                mSearchClass.execute(searchFieldEditText.getText().toString());
+                String searchString = searchFieldEditText.getText().toString();
+                if(!searchString.trim().isEmpty()){
+                    SearchArtist mSearchClass = new SearchArtist(getActivity());
+                    mSearchClass.execute(searchString);
+                } else {
+                    Toast toast = Toast.makeText(getActivity(), "Please search for an artist", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+
             }
         });
 
@@ -94,6 +102,7 @@ public class ArtistFragment extends Fragment {
                         .putExtra(Intent.EXTRA_TEXT, selectedArtist.name);
                 intent.putExtra(ARTIST_ID, selectedArtist.id);
                 intent.putExtra(ARTIST_NAME, selectedArtist.name);
+
                 startActivity(intent);
             }
         });

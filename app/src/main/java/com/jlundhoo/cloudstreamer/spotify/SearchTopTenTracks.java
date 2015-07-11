@@ -2,7 +2,6 @@ package com.jlundhoo.cloudstreamer.spotify;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import com.jlundhoo.cloudstreamer.SimpleTrack;
 import com.jlundhoo.cloudstreamer.fragments.TopTenTrackFragment;
@@ -46,8 +45,7 @@ public class SearchTopTenTracks extends AsyncTask<String, Void, Tracks> {
         searchResult = (ArrayList)tracks.tracks;
 
         if(searchResult.isEmpty()){
-            Toast toast = Toast.makeText(mContext, "No top tracks found", Toast.LENGTH_SHORT);
-            toast.show();
+            TopTenTrackFragment.displayNoTracksFound(mContext);
         } else{
             for (int i = 0; i < searchResult.size(); i++) {
                 //Adds search-results to parcelable ArrayList, so they can be restored on device reconfiguration

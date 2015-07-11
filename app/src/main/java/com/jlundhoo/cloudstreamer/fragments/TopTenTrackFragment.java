@@ -1,20 +1,22 @@
 package com.jlundhoo.cloudstreamer.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jlundhoo.cloudstreamer.R;
-import com.jlundhoo.cloudstreamer.spotify.SearchTopTenTracks;
 import com.jlundhoo.cloudstreamer.SimpleTrack;
 import com.jlundhoo.cloudstreamer.activities.TrackDetailActivity;
 import com.jlundhoo.cloudstreamer.adapters.TopTenAdapter;
+import com.jlundhoo.cloudstreamer.spotify.SearchTopTenTracks;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +33,6 @@ public class TopTenTrackFragment extends Fragment {
     private static String ALBUM_NAME = "album_name";
     private static String ALBUM_IMAGE_URL = "album_image_url";
 
-    private TextView artistNameTV;
     private ListView topTenTrackLV;
 
     public static List<Track> topTenTrackList;
@@ -42,7 +43,7 @@ public class TopTenTrackFragment extends Fragment {
     private String artistName;
     private String artistID;
 
-
+    private static FragmentActivity activity;
 
     @Override
     public void onViewStateRestored(Bundle savedInstanceState) {
@@ -54,6 +55,8 @@ public class TopTenTrackFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         topTenTrackList = new ArrayList<Track>();
+        activity = getActivity();
+
         Intent intent = getActivity().getIntent();  //Retrieves the activity, to receive the context from which to get intent
         this.artistName = intent.getStringExtra(ArtistFragment.ARTIST_NAME);
         this.artistID = intent.getStringExtra(ArtistFragment.ARTIST_ID);
@@ -102,6 +105,10 @@ public class TopTenTrackFragment extends Fragment {
         }
         mAdapter.notifyDataSetChanged();
     }
-
+    public static void displayNoTracksFound(Context mContext){
+        Toast toast = Toast.makeText(mContext, "No top tracks found", Toast.LENGTH_SHORT);
+        toast.show();
+        activity.finish();
+    }
 
 }
