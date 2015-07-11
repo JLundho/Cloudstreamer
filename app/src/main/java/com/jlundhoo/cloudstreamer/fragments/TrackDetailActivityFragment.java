@@ -18,6 +18,10 @@ import com.squareup.picasso.Picasso;
  */
 public class TrackDetailActivityFragment extends Fragment {
 
+    private String TRACK_NAME = "track_name";
+    private String ALBUM_NAME = "album_name";
+    private String ALBUM_IMAGE_URL = "album_image_url";
+
     private String trackName;
     private String albumName;
     private String albumImageURL;
@@ -26,14 +30,11 @@ public class TrackDetailActivityFragment extends Fragment {
     private TextView albumNameTV;
     private ImageView albumImageIV;
 
-    private static String TRACK_NAME = "track_name";
-    private static String ALBUM_NAME = "album_name";
-    private static String ALBUM_IMAGE_URL = "album_image_url";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent intent = getActivity().getIntent();  //Retrieves the activity, to receive the context from which to get intent
+        Intent intent = getActivity().getIntent();
 
         albumImageURL = intent.getStringExtra(ALBUM_IMAGE_URL);
         trackName = intent.getStringExtra(TRACK_NAME);

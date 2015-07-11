@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.jlundhoo.cloudstreamer.R;
-import com.jlundhoo.cloudstreamer.SearchArtist;
+import com.jlundhoo.cloudstreamer.spotify.SearchArtist;
 import com.jlundhoo.cloudstreamer.SimpleArtist;
 import com.jlundhoo.cloudstreamer.activities.TopTenTrackActivity;
 import com.jlundhoo.cloudstreamer.adapters.ArtistAdapter;
@@ -30,7 +30,7 @@ public class ArtistFragment extends Fragment {
 
     public static final String ARTIST_NAME = "artist_name";
     public static final String ARTIST_ID = "artist_id";
-    static final String ARTISTLIST_PARCEL = "artistlist_parcel";
+    private static final String ARTISTLIST_PARCEL = "artistlist_parcel";
 
     private EditText searchFieldEditText;
     private ListView artistListView;

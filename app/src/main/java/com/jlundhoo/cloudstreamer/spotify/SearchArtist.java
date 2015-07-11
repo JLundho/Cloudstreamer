@@ -1,9 +1,10 @@
-package com.jlundhoo.cloudstreamer;
+package com.jlundhoo.cloudstreamer.spotify;
 
 import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import com.jlundhoo.cloudstreamer.SimpleArtist;
 import com.jlundhoo.cloudstreamer.fragments.ArtistFragment;
 
 import java.util.ArrayList;
