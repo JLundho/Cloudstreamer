@@ -12,7 +12,6 @@ import com.jlundhoo.cloudstreamer.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import kaaes.spotify.webapi.android.models.Artist;
 
@@ -31,14 +30,6 @@ public class ArtistAdapter extends ArrayAdapter{
 
     public void add(Artist mArtist){
         artistList.add(mArtist);
-    }
-
-
-    public void addArtists(List<Artist> artistList){
-        for(int i = 0; i < artistList.size(); i++){
-            this.artistList.add(artistList.get(i));
-        }
-        notifyDataSetChanged();
     }
 
     @Override
