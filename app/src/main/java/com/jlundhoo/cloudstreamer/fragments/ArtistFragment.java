@@ -1,7 +1,9 @@
 package com.jlundhoo.cloudstreamer.fragments;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -15,6 +17,7 @@ import android.widget.Toast;
 
 import com.jlundhoo.cloudstreamer.R;
 import com.jlundhoo.cloudstreamer.SimpleArtist;
+import com.jlundhoo.cloudstreamer.Utility;
 import com.jlundhoo.cloudstreamer.activities.TopTenTrackActivity;
 import com.jlundhoo.cloudstreamer.adapters.ArtistAdapter;
 import com.jlundhoo.cloudstreamer.spotify.SearchArtist;
@@ -43,6 +46,9 @@ public class ArtistFragment extends Fragment {
 
     public static ArtistAdapter mAdapter;
 
+    private ConnectivityManager networkChecker;
+
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -67,9 +73,17 @@ public class ArtistFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
+
+        networkChecker = (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+
         View rootView = inflater.inflate(R.layout.fragment_artist, container, false);
         searchFieldEditText = (EditText) rootView.findViewById(R.id.editTextSearch);
         artistListView = (ListView) rootView.findViewById(R.id.artistLV);
@@ -79,14 +93,17 @@ public class ArtistFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 String searchString = searchFieldEditText.getText().toString();
-                if(!searchString.trim().isEmpty()){
+
+                if(!searchString.trim().isEmpty() && Utility.isOnline()){
                     SearchArtist mSearchClass = new SearchArtist(getActivity());
                     mSearchClass.execute(searchString);
+                } else if (!Utility.isOnline()){
+                    Toast toast = Toast.makeText(getActivity(), "No internet connection available", Toast.LENGTH_SHORT);
+                    toast.show();
                 } else {
                     Toast toast = Toast.makeText(getActivity(), "Please search for an artist", Toast.LENGTH_SHORT);
                     toast.show();
                 }
-
             }
         });
 
@@ -96,14 +113,18 @@ public class ArtistFragment extends Fragment {
         artistListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Artist selectedArtist = mAdapter.getItemById(position);
+                if(Utility.isOnline()){
+                    Artist selectedArtist = mAdapter.getItemById(position);
 
-                Intent intent = new Intent(getActivity(), TopTenTrackActivity.class)
-                        .putExtra(Intent.EXTRA_TEXT, selectedArtist.name);
-                intent.putExtra(ARTIST_ID, selectedArtist.id);
-                intent.putExtra(ARTIST_NAME, selectedArtist.name);
-
-                startActivity(intent);
+                    Intent intent = new Intent(getActivity(), TopTenTrackActivity.class)
+                            .putExtra(Intent.EXTRA_TEXT, selectedArtist.name);
+                    intent.putExtra(ARTIST_ID, selectedArtist.id);
+                    intent.putExtra(ARTIST_NAME, selectedArtist.name);
+                    startActivity(intent);
+                } else {
+                    Toast toast = Toast.makeText(getActivity(), "No internet connection available", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
             }
         });
 

@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.jlundhoo.cloudstreamer.R;
 import com.jlundhoo.cloudstreamer.SimpleTrack;
+import com.jlundhoo.cloudstreamer.Utility;
 import com.jlundhoo.cloudstreamer.activities.TrackDetailActivity;
 import com.jlundhoo.cloudstreamer.adapters.TopTenAdapter;
 import com.jlundhoo.cloudstreamer.spotify.SearchTopTenTracks;
@@ -32,6 +33,7 @@ public class TopTenTrackFragment extends Fragment {
     private static String TRACK_NAME = "track_name";
     private static String ALBUM_NAME = "album_name";
     private static String ALBUM_IMAGE_URL = "album_image_url";
+    private static final String TRACKLIST_PARCEL = "tracklist_parcel";
 
     private ListView topTenTrackLV;
 
@@ -48,6 +50,23 @@ public class TopTenTrackFragment extends Fragment {
     @Override
     public void onViewStateRestored(Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
+
+        if(savedInstanceState != null){
+            parcelableTrackList = savedInstanceState.getParcelableArrayList(TRACKLIST_PARCEL);
+
+            for(SimpleTrack simpleTrack : parcelableTrackList) {
+                Track track = new Track();
+                track.name = simpleTrack.name;
+                track.album = simpleTrack.album;
+                mAdapter.add(track);
+            }
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(TRACKLIST_PARCEL, parcelableTrackList);
     }
 
     @Override
@@ -65,6 +84,11 @@ public class TopTenTrackFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
@@ -77,20 +101,27 @@ public class TopTenTrackFragment extends Fragment {
         topTenTrackLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Track selectedTrack = (Track) mAdapter.getItemById(position);
-                String albumImageURL = selectedTrack.album.images.get(0).url;
+                if(Utility.isOnline()) {
+                    Track selectedTrack = (Track) mAdapter.getItemById(position);
+                    String albumImageURL = selectedTrack.album.images.get(0).url;
 
-                Intent intent = new Intent(getActivity(), TrackDetailActivity.class);
-                intent.putExtra(TRACK_NAME, selectedTrack.name);
-                intent.putExtra(ALBUM_NAME, selectedTrack.album.name);
-                intent.putExtra(ALBUM_IMAGE_URL, albumImageURL);
-                startActivity(intent);
+                    Intent intent = new Intent(getActivity(), TrackDetailActivity.class);
+                    intent.putExtra(TRACK_NAME, selectedTrack.name);
+                    intent.putExtra(ALBUM_NAME, selectedTrack.album.name);
+                    intent.putExtra(ALBUM_IMAGE_URL, albumImageURL);
+                    startActivity(intent);
+                } else {
+                    Toast toast = Toast.makeText(getActivity(), "No internet connection available", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
             }
         });
 
-        //Get top ten (or less) tracks, for given artist, using the US-locale.
-        SearchTopTenTracks mSearchTopTenTracks = new SearchTopTenTracks(getActivity());
-        mSearchTopTenTracks.execute(artistID);
+        //Only perform the search if there is absolutely no data to be retrieved.
+        if (Utility.isOnline() && mAdapter.isEmpty() && parcelableTrackList.isEmpty()) {
+            SearchTopTenTracks mSearchTopTenTracks = new SearchTopTenTracks(getActivity());
+            mSearchTopTenTracks.execute(artistID);
+        }
 
         return rootView;
     }
@@ -98,7 +129,6 @@ public class TopTenTrackFragment extends Fragment {
     public static void addTracksToAdapter(){
         //Clear out old artists in ListView to make room for new
         mAdapter.clear();
-        parcelableTrackList.clear();
 
         for(Track track : topTenTrackList){
             mAdapter.add(track);
