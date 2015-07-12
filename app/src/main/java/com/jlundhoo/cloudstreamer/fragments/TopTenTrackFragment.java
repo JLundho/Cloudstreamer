@@ -118,7 +118,8 @@ public class TopTenTrackFragment extends Fragment {
         });
 
         //Only perform the search if there is absolutely no data to be retrieved.
-        if (Utility.isOnline() && mAdapter.isEmpty() && parcelableTrackList.isEmpty()) {
+        //Also catches the off-case where a user loaded top tracks with Internet connection, but turns off the connection before navigating forward.
+        if ((Utility.isOnline() && parcelableTrackList.isEmpty()) || (Utility.isOnline() && mAdapter.isEmpty())) {
             SearchTopTenTracks mSearchTopTenTracks = new SearchTopTenTracks(getActivity());
             mSearchTopTenTracks.execute(artistID);
         }
